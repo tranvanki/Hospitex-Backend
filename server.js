@@ -1,5 +1,3 @@
-
-
 //---------------------------------------------------------------------------------
 
 const express = require('express');
@@ -13,11 +11,17 @@ const path = require('path');
 const cors = require('cors');
 
 // body parser middleware
-app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// CORS configuration
+const corsOptions = {
+  origin: process.env.CLIENT || 'https://web2-client-seven.vercel.app',
+  credentials: true,
+  optionsSuccessStatus: 200
+};
 
+app.use(cors(corsOptions));
 
 // Connect to MongoDB
 const mongoose = require('mongoose');
@@ -41,10 +45,20 @@ app.use('/staffs', staffRoutes);
 app.use('/vitals', vitalsRoutes);
 app.use('/medic-records', medicRecordRoutes);
 
-
+// Global error handler for production
+if (process.env.NODE_ENV === 'production') {
+  app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+  });
+}
 
 // Start server
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`Server is running on port ${port}`);
+  } else {
+    console.log(`Server is running at http://localhost:${port}`);
+  }
 });
