@@ -1,0 +1,22 @@
+[{
+    "dev" : "nodemon server.js",
+    "test" : "echo \"Error: no test specified\" && exit 1",
+    "name" : "cwweb2",
+    "version" : "1.0.0",
+    "main" : "index.js",
+    "scripts" : {
+        "test": "echo \"Error: no test specified\" && exit 1",  
+        "dev": "nodemon server.js"
+    },
+    "keywords" : [],
+    "author" : "",
+    "license" : "ISC",
+    "dependencies" : {
+        "express": "^5.1.0",
+        "mongoose": "^8.16.0"
+    },
+    "OS" : "linux",
+    "Ubuntu" : "24.04",
+    "description": "Ubuntu 24.04 LTS",
+    "Codename":"noble"
+}]
