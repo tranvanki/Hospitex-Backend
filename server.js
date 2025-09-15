@@ -3,7 +3,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-
+const bodyParser = require('body-parser');
 const app = express();
 
 console.log('Environment Check:');
