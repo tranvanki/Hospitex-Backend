@@ -1,7 +1,7 @@
 const MedicalRecord = require('../models/MedicRecord');
 const Patient = require('../models/Patient');
 
-// Get ALL medical records (for listing all records)
+// Get ALL medical records 
 const getAllRecords = async (req, res) => {
     try {
         let records;
@@ -20,7 +20,6 @@ const getAllRecords = async (req, res) => {
                 .populate('patient_id', 'patient_name')
                 .sort({ visit_date: -1 });
         }
-        
         // Add patient_name for frontend
         const recordsWithPatientName = records.map(record => ({
             ...record.toObject(),
@@ -42,7 +41,7 @@ const getRecordsByPatientId = async (req, res) => {
         if (!patient) {
             return res.status(404).json({ message: 'Patient not found' });
         }
-        // Check permission FIRST
+        // Check permission 
         if (req.user.role !== 'admin' && patient.staff_id.toString() !== req.user.id.toString()) {
             return res.status(403).json({ message: 'You do not have access to this patient\'s data' });
         }
@@ -178,3 +177,7 @@ module.exports = {
     totalMedicRecord
         
 };
+
+//const MedicalRecord = require('../models/MedicRecord');
+//const patient = require('../models/Patient');
+//

@@ -2,8 +2,8 @@ const express = require('express');
 require('dotenv').config();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 
-const bodyParser = require('body-parser');
 const app = express();
 
 console.log('Environment Check:');
@@ -51,7 +51,7 @@ mongoose.connect(process.env.DBURL)
     console.error('MongoDB connection error:', err);
     process.exit(1);
   });
-
+//mongoose.connect(process.env.DBURL)
 // Health check endpoints
 app.get('/', (req, res) => {
   res.json({
