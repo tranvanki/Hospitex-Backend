@@ -11,32 +11,19 @@ console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('DBURL:', process.env.DBURL ? 'Connected' : 'Missing');
 console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'Set' : 'Missing');
 
+// In server.js
 const corsOptions = {
-   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin) return callback(null, true);
-    
-    const allowedOrigins = process.env.NODE_ENV === 'production' 
-      ? [
-          'https://hospitex-frontend-jzwu.vercel.app',
-          'https://*.vercel.app'
-        ]
-      : [
-          'http://localhost:5173',
-          'http://localhost:3000',
-          'http://localhost:8080'
-        ];
-    
-    if (allowedOrigins.includes(origin) || allowedOrigins.some(allowed => origin && origin.match(allowed))) {
-      callback(null, true);
-    } else {
-      callback(null, true); // Allow all for now
-    }
-  },
+  origin: process.env.NODE_ENV === 'production'
+  ? [
+    'https://hospitex-frontend-jzwu.vercel.app', 
+    'https://hospitex-frontend.onrender.com',
+    'https://hospitex.onrender.com',
+    'https://*.vercel.app'  // Allow all Vercel subdomains
+  ]
+  : ['http://localhost:5173','http://localhost:8080'],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  optionsSuccessStatus: 200
+  methods: ['GET', 'POST', 'PUT', 'DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions));
