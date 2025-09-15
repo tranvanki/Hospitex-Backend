@@ -1,5 +1,3 @@
-//---------------------------------------------------------------------------------
-
 const express = require('express');
 require('dotenv').config();
 const mongoose = require('mongoose');
@@ -9,7 +7,7 @@ const path = require('path');
 const app = express();
 
 const corsOptions = {
-  origin : process.env.NODE_ENV === 'production'
+  origin: process.env.NODE_ENV === 'production'
     ? [
         'https://your-frontend-name.vercel.app',
         'https://*.vercel.app'
@@ -24,15 +22,15 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Debug environment
-console.log('🔧 Environment Check:');
+console.log('Environment Check:');
 console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('DBURL:', process.env.DBURL ? '✅ Set' : '❌ Missing');
+console.log('DBURL:', process.env.DBURL ? 'Set' : 'Missing');
 
 // MongoDB Connection
 mongoose.connect(process.env.DBURL)
-  .then(() => console.log('✅ Connected to MongoDB'))
+  .then(() => console.log('Connected to MongoDB'))
   .catch(err => {
-    console.error('❌ MongoDB connection error:', err);
+    console.error('MongoDB connection error:', err);
     process.exit(1);
   });
 
@@ -56,54 +54,54 @@ app.get('/api/health', (req, res) => {
 });
 
 // Load routes with error handling
-console.log('📁 Loading routes...');
+console.log('Loading routes...');
 
 try {
   const authRoutes = require('./api/routes/authRoutes');
   app.use('/api/auth', authRoutes);
-  console.log('✅ Auth routes loaded');
+  console.log('Auth routes loaded');
 } catch (error) {
-  console.error('❌ Error loading auth routes:', error.message);
+  console.error('Error loading auth routes:', error.message);
 }
 
 try {
   const patientRoutes = require('./api/routes/patientRoutes');
   app.use('/api/patients', patientRoutes);
-  console.log('✅ Patient routes loaded');
+  console.log('Patient routes loaded');
 } catch (error) {
-  console.error('❌ Error loading patient routes:', error.message);
+  console.error('Error loading patient routes:', error.message);
 }
 
 try {
   const staffRoutes = require('./api/routes/staffRoutes');
   app.use('/api/staffs', staffRoutes);
-  console.log('✅ Staff routes loaded');
+  console.log('Staff routes loaded');
 } catch (error) {
-  console.error('❌ Error loading staff routes:', error.message);
+  console.error('Error loading staff routes:', error.message);
 }
 
 try {
   const vitalsRoutes = require('./api/routes/vitalsRoutes');
   app.use('/api/vitals', vitalsRoutes);
-  console.log('✅ Vitals routes loaded');
+  console.log('Vitals routes loaded');
 } catch (error) {
-  console.error('❌ Error loading vitals routes:', error.message);
+  console.error('Error loading vitals routes:', error.message);
 }
 
 try {
   const medicRecordRoutes = require('./api/routes/MedicRecordRoutes');
   app.use('/api/records', medicRecordRoutes);
-  console.log('✅ Medical records routes loaded');
+  console.log('Medical records routes loaded');
 } catch (error) {
-  console.error('❌ Error loading medical records routes:', error.message);
+  console.error('Error loading medical records routes:', error.message);
 }
 
 try {
   const protectedRoutes = require('./api/routes/protectedRoutes');
   app.use('/api', protectedRoutes);
-  console.log('✅ Protected routes loaded');
+  console.log('Protected routes loaded');
 } catch (error) {
-  console.error('❌ Error loading protected routes:', error.message);
+  console.error('Error loading protected routes:', error.message);
 }
 
 // Error handling middleware
@@ -135,6 +133,6 @@ app.use('*', (req, res) => {
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
