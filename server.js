@@ -9,9 +9,9 @@ const path = require('path');
 const app = express();
 
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' // FIXED: process.env
+  origin : process.env.NODE_ENV === 'production'
     ? [
-        'https://your-frontend-name.vercel.app', // Your Vercel URL
+        'https://your-frontend-name.vercel.app',
         'https://*.vercel.app'
       ]
     : ['http://localhost:5173', 'http://localhost:8080'],
@@ -23,7 +23,12 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// MongoDB Connection - Using DBURL from your .env
+// Debug environment
+console.log('🔧 Environment Check:');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('DBURL:', process.env.DBURL ? '✅ Set' : '❌ Missing');
+
+// MongoDB Connection
 mongoose.connect(process.env.DBURL)
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch(err => {
@@ -50,25 +55,60 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Routes - ORGANIZED BETTER
-const authRoutes = require('./api/routes/authRoutes');
-const patientRoutes = require('./api/routes/patientRoutes');
-const staffRoutes = require('./api/routes/staffRoutes');
-const vitalsRoutes = require('./api/routes/vitalsRoutes');
-const medicRecordRoutes = require('./api/routes/MedicRecordRoutes');
-const protectedRoutes = require('./api/routes/protectedRoutes');
+// Load routes with error handling
+console.log('📁 Loading routes...');
 
-// API Routes with /api prefix for consistency
-app.use('/api', protectedRoutes);
-app.use('/api/auth', authRoutes);      // Better: /api/auth/login
-app.use('/api/patients', patientRoutes); // Better: /api/patients/
-app.use('/api/staffs', staffRoutes);
-app.use('/api/vitals', vitalsRoutes);
-app.use('/api/records', medicRecordRoutes); // Changed from medic-records to records
+try {
+  const authRoutes = require('./api/routes/authRoutes');
+  app.use('/api/auth', authRoutes);
+  console.log('✅ Auth routes loaded');
+} catch (error) {
+  console.error('❌ Error loading auth routes:', error.message);
+}
+
+try {
+  const patientRoutes = require('./api/routes/patientRoutes');
+  app.use('/api/patients', patientRoutes);
+  console.log('✅ Patient routes loaded');
+} catch (error) {
+  console.error('❌ Error loading patient routes:', error.message);
+}
+
+try {
+  const staffRoutes = require('./api/routes/staffRoutes');
+  app.use('/api/staffs', staffRoutes);
+  console.log('✅ Staff routes loaded');
+} catch (error) {
+  console.error('❌ Error loading staff routes:', error.message);
+}
+
+try {
+  const vitalsRoutes = require('./api/routes/vitalsRoutes');
+  app.use('/api/vitals', vitalsRoutes);
+  console.log('✅ Vitals routes loaded');
+} catch (error) {
+  console.error('❌ Error loading vitals routes:', error.message);
+}
+
+try {
+  const medicRecordRoutes = require('./api/routes/MedicRecordRoutes');
+  app.use('/api/records', medicRecordRoutes);
+  console.log('✅ Medical records routes loaded');
+} catch (error) {
+  console.error('❌ Error loading medical records routes:', error.message);
+}
+
+try {
+  const protectedRoutes = require('./api/routes/protectedRoutes');
+  app.use('/api', protectedRoutes);
+  console.log('✅ Protected routes loaded');
+} catch (error) {
+  console.error('❌ Error loading protected routes:', error.message);
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('Server Error:', err.stack);
   res.status(500).json({ 
     message: 'Something went wrong!',
     error: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
@@ -79,11 +119,16 @@ app.use((err, req, res, next) => {
 app.use('*', (req, res) => {
   res.status(404).json({ 
     message: 'Route not found',
+    requestedPath: req.originalUrl,
+    method: req.method,
     availableRoutes: [
-      '/api/auth/login',
-      '/api/patients',
-      '/api/vitals',
-      '/api/records'
+      'GET  /',
+      'GET  /api/health',
+      'POST /api/auth/login',
+      'POST /api/auth/signup',
+      'GET  /api/patients/total',
+      'GET  /api/vitals/totalVitals',
+      'GET  /api/records/totalMedicalRecords'
     ]
   });
 });
