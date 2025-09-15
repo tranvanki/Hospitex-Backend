@@ -2,29 +2,46 @@ const express = require('express');
 require('dotenv').config();
 const mongoose = require('mongoose');
 const cors = require('cors');
-const path = require('path');
-
+const bodyParser = require('body-parser');
 const app = express();
 
+console.log('Environment Check:');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('DBURL:', process.env.DBURL ? 'Connected' : 'Missing');
+console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'Set' : 'Missing');
+
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
-    ? [
-        'https://your-frontend-name.vercel.app',
-        'https://*.vercel.app'
-      ]
-    : ['http://localhost:5173', 'http://localhost:8080'],
+   origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = process.env.NODE_ENV === 'production' 
+      ? [
+          'https://your-frontend.vercel.app',
+          'https://*.vercel.app'
+        ]
+      : [
+          'http://localhost:5173',
+          'http://localhost:3000',
+          'http://localhost:8080'
+        ];
+    
+    if (allowedOrigins.includes(origin) || allowedOrigins.some(allowed => origin && origin.match(allowed))) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Allow all for now
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
-
-// Debug environment
-console.log('Environment Check:');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('DBURL:', process.env.DBURL ? 'Set' : 'Missing');
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
 // MongoDB Connection
 mongoose.connect(process.env.DBURL)
@@ -133,6 +150,6 @@ app.use('*', (req, res) => {
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log('Server running on port', PORT);
+  console.log('Environment:', process.env.NODE_ENV || 'development');
 });
