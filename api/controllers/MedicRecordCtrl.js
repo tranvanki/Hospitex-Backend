@@ -160,11 +160,21 @@ const deleteRecord = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
-
+//total Medic Record
+const totalMedicRecord = async (req, res) => {
+    try{
+        const count = await MedicalRecord.countDocuments();
+        res.json({ totalMedicRecord: count });
+    }catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};  
 module.exports = {
     getAllRecords,           
     getRecordsByPatientId,   
     createRecord,            
     updateRecord,            
-    deleteRecord             
+    deleteRecord,
+    totalMedicRecord
+        
 };

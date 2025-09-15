@@ -21,7 +21,8 @@ const getAllPatients = async (req, res) => {
 const getMyPatients = async (req, res) => {
   try {
     // Find patients assigned to the logged-in doctor (staff)
-    const patients = await Patient.find({ staff_id: req.user.id });
+    // Fix: Use req.user._id instead of req.user.id
+    const patients = await Patient.find({ staff_id: req.user._id });
     res.status(200).json(patients);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -43,7 +44,7 @@ const createPatient = async (req, res) => {
     // Assign the logged-in doctor's id to staff_id
     const newPatient = new Patient({
       ...req.body,
-      staff_id: req.user.id
+      staff_id: req.user._id  // Fix: Use req.user._id
     });
     const savedPatient = await newPatient.save();
     res.status(201).json(savedPatient);
@@ -72,17 +73,15 @@ const deletePatientById = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-const searchPatients = async (req, res) => {
-  const { name } = req.query;
+//totalPatient
+const totalPatient = async (req, res) => {
   try {
-    const patients = await Patient.find({ name: new RegExp(name, 'i') });
-    res.status(200).json(patients);
+    const count = await Patient.countDocuments();
+    res.json({ totalPatient: count });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
-
 // Export all functions
 module.exports = {
   getAllPatients,
@@ -91,5 +90,6 @@ module.exports = {
   createPatient,
   updatePatient,
   deletePatientById,
-  searchPatients
+  totalPatient
+ 
 };

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/Staffs'); // Staff model
 
-const JWT_SECRET = process.env.JWT_SECRET; // Use process.env.SECRET in production
+const JWT_SECRET = process.env.JWT_SECRET; // Use process.env.SECRET 
 
 // Middleware: Verify token from "Authorization: Bearer <token>"
 exports.authenticateToken = async (req, res, next) => {
@@ -21,7 +21,7 @@ exports.authenticateToken = async (req, res, next) => {
   }
 };
 
-// Middleware: Restrict access to specific roles
+// Middleware: Restrict access
 exports.authorizeRoles = (...roles) => {
   return (req, res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {
@@ -30,4 +30,3 @@ exports.authorizeRoles = (...roles) => {
     next();
   };
 };
-

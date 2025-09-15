@@ -177,11 +177,20 @@ const deleteVital = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
-
+//totalvital
+const totalVital = async (req, res) => {
+  try {
+    const count = await Vitals.countDocuments();
+    res.json({ totalVital: count });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 module.exports = {
   getAllVitals,           
   getVitalsByPatientId,
   createVital,
   updateVital,
+  totalVital,
   deleteVital
 };

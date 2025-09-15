@@ -5,7 +5,8 @@ const {
     getVitalsByPatientId, 
     createVital, 
     updateVital, 
-    deleteVital 
+    deleteVital,
+    totalVital
 } = require('../controllers/vitalsController');
 
 // ✅ Add auth middleware (use the same one as medical records)
@@ -16,7 +17,8 @@ router.use(authenticateToken);
 
 // Get all vitals
 router.get('/', getAllVitals);
-
+//total
+router.get('/totalVitals', totalVital);
 // Get vitals for specific patient
 router.get('/patient/:id', getVitalsByPatientId); // ← Use 'id' to match frontend
 

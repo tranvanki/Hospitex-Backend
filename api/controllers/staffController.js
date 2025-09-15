@@ -16,6 +16,7 @@ const getAllStaff = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
 const getStaffById = async (req, res) => {
   try {
     const staff = await Staff.findById(req.params.id);
@@ -110,6 +111,8 @@ const deleteStaffById = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
 module.exports = {
   getAllStaff,
   getStaffById,

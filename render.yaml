@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: web2server
+    name: Hospitex-Backend
     env: node
     buildCommand: npm install
     startCommand: npm start

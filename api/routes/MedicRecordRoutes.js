@@ -5,7 +5,8 @@ const {
     getAllRecords,
     createRecord,
     updateRecord,
-    deleteRecord
+    deleteRecord,
+    totalMedicRecord
 } = require('../controllers/MedicRecordCtrl');
 router.use(authenticateToken);
 // Patient-specific routes
@@ -15,5 +16,5 @@ router.post('/', createRecord);
 // Record-specific routes (for doctor dashboard editing)
 router.put('/:id', updateRecord);
 router.delete('/:id', deleteRecord);
-
+router.get('/totalMedicalRecords', totalMedicRecord);
 module.exports = router;

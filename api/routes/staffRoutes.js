@@ -15,6 +15,7 @@ const {
 // Route to get all staff members
 router.get('/', authenticateToken, authorizeRoles('admin'), getAllStaff);
 
+
 // Read staff by ID
 router.get('/:id', authenticateToken, authorizeRoles('admin'), getStaffById);
 

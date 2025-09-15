@@ -7,7 +7,8 @@ const {
     createPatient,
     updatePatient,
     getMyPatients,
-    deletePatientById
+    deletePatientById,
+    totalPatient
 } = require('../controllers/patientController');
     const router = express.Router();
 
@@ -15,6 +16,8 @@ const {
     router.get('/', authenticateToken, getAllPatients);
 // Route to get patients assigned to the logged-in doctor
     router.get('/my-patients', authenticateToken, getMyPatients);
+    //total
+    router.get('/total', authenticateToken, totalPatient);
     // Route to get a specific patient by ID
     router.get('/:id', authenticateToken, getPatientById);
     // Route to create a new patient
@@ -24,8 +27,7 @@ const {
     router.put('/:id', authenticateToken, authorizeRoles('doctor'), updatePatient);
     // Route to delete a patient
     router.delete('/:id', authenticateToken, authorizeRoles('doctor'), deletePatientById);
-
-  
+    
 
 module.exports = router;
 

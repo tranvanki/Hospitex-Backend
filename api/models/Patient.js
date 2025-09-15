@@ -5,6 +5,9 @@ const patientSchema = new mongoose.Schema({
     phone_num: { type: String, required: [true, 'Phone number is required!'] },
     medical_history: { type: String, required: [true, 'Medical history is required!'] },
     discharge_status: { type: String, required: [true, 'Discharge status is required!'] },
+    gender : {type: String, required: [true, 'Gender is required!']},
+    date_of_birth: { type: Date, required: [true, 'Date of birth is required!'] },
+    address: { type: String, required: [true, 'Address is required!'] },
     staff_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Staffs', required: true }
 })
 

@@ -1,27 +1,27 @@
 //---------------------------------------------------------------------------------
 
-const express = require('express');
+const express = require('express');  //const express = require('express');
 require('dotenv').config();
 const app = express();
 app.use(express.json());
-const expressJwt = require('express-jwt');
-const { signup, login, logout } = require('./api/controllers/authController');
 const path = require('path');
-// const session = require('express-session');
 const cors = require('cors');
-
-// body parser middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
-
-// CORS configuration
+//CORS
 const corsOptions = {
-  origin: process.env.CLIENT || 'https://web2-client-seven.vercel.app',
+  origin : process.end.NODE_ENV === 'production'
+  ?[
+    //frontend production URL
+    'https://hospitex-frontend.onrender.com',
+    'https://hospitex.onrender.com'
+  ]
+  :['http://localhost:5173','http://localhost:8080'],
   credentials: true,
-  optionsSuccessStatus: 200
+  methods: [ 'GET', 'POST', 'PUT', 'DELETE','OPTIONS' ],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
-
 app.use(cors(corsOptions));
+app.use(express.json());
+
 
 // Connect to MongoDB
 const mongoose = require('mongoose');
@@ -31,7 +31,17 @@ mongoose.connect(databaseUrl)
   .catch(err => {
     console.error('Error connecting to MongoDB:', err);
   });
-//routes
+  //Health check endpoint
+  // Health check endpoint for Render
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Healthcare API is running!',
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV
+  });
+});
+//routes define
 const authRoutes = require('./api/routes/authRoutes');
 const patientRoutes = require('./api/routes/patientRoutes');
 const staffRoutes = require('./api/routes/staffRoutes');
@@ -45,20 +55,10 @@ app.use('/staffs', staffRoutes);
 app.use('/vitals', vitalsRoutes);
 app.use('/medic-records', medicRecordRoutes);
 
-// Global error handler for production
-if (process.env.NODE_ENV === 'production') {
-  app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
-  });
-}
 
 // Start server
-const port = process.env.PORT || 3001;
-app.listen(port, () => {
-  if (process.env.NODE_ENV === 'production') {
-    console.log(`Server is running on port ${port}`);
-  } else {
-    console.log(`Server is running at http://localhost:${port}`);
-  }
+const port = process.env.PORT || 10000;
+app.listen(port,'0.0.0.0', () => {
+  console.log(`🚀 Server is running at http://localhost:${port}`);
+  console.log(`📡 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
