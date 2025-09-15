@@ -18,7 +18,7 @@ const corsOptions = {
     
     const allowedOrigins = process.env.NODE_ENV === 'production' 
       ? [
-          'https://your-frontend.vercel.app',
+          'https://hospitex-frontend-jzwu.vercel.app',
           'https://*.vercel.app'
         ]
       : [
