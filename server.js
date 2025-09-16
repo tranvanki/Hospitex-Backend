@@ -109,6 +109,20 @@ try {
   console.error('Error loading protected routes:', error.message);
 }
 
+// Debug registered routes
+app._router.stack.forEach(function(r){
+  if (r.route && r.route.path) {
+    console.log(`Route: ${Object.keys(r.route.methods)} ${r.route.path}`);
+  } else if (r.name === 'router') {
+    console.log('Router middleware:');
+    r.handle.stack.forEach(function(layer) {
+      if (layer.route) {
+        console.log(`  ${Object.keys(layer.route.methods)} ${layer.route.path}`);
+      }
+    });
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Server Error:', err.stack);
