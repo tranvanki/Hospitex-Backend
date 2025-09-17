@@ -12,7 +12,7 @@ console.log('DBURL:', process.env.DBURL ? 'Connected' : 'Missing');
 console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'Set' : 'Missing');
 
 // In server.js
-const allowOrigins =  process.env.NODE_ENV === 'production'
+const allowedOrigins =  process.env.NODE_ENV === 'production'
   ? [
     'https://hospitex-frontend-jzwu.vercel.app', 
     'https://hospitex-frontend.vercel.app',
