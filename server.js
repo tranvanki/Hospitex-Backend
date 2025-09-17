@@ -12,21 +12,28 @@ console.log('DBURL:', process.env.DBURL ? 'Connected' : 'Missing');
 console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'Set' : 'Missing');
 
 // In server.js
-const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
+const allowOrigins =  process.env.NODE_ENV === 'production'
   ? [
     'https://hospitex-frontend-jzwu.vercel.app', 
-    'https://hospitex-frontend.onrender.com',
-    'https://hospitex.onrender.com',
-    'https://*.vercel.app'  // Allow all Vercel subdomains
+    'https://hospitex-frontend.vercel.app',
+    'https://hospitex.onrender.com'
+    
   ]
-  : ['http://localhost:5173','http://localhost:8080'],
-  credentials: true,
+  : ['http://localhost:5173','http://localhost:8080'];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if(!origin) return callback(null,true);
+    if(allowedOrigins.includes(origin)|| allowedOrigins.some(o => typeof o === origin)) {
+  return callback(null, true);
+  }
+return callback(new Error('CORS: Origin not allowed'), false);},
+    credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); 
 app.use(express.json());
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
@@ -38,8 +45,7 @@ mongoose.connect(process.env.DBURL)
     console.error('MongoDB connection error:', err);
     process.exit(1);
   });
-//mongoose.connect(process.env.DBURL)
-// Health check endpoints
+
 app.get('/', (req, res) => {
   res.json({
     message: 'Healthcare API is running!',
