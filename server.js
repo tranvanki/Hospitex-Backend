@@ -16,8 +16,10 @@ const allowedOrigins =  process.env.NODE_ENV === 'production'
   ? [
     'https://hospitex-frontend-jzwu.vercel.app', 
     'https://hospitex-frontend.vercel.app',
-    'https://hospitex.vercel.app/',
-    /https:\/\/.*\.vercel\.app$/
+      'https://hospitex.vercel.app',
+        /https:\/\/.*\.vercel\.app$/
+    
+    
     
   ]
   : ['http://localhost:5173','http://localhost:8080'];
