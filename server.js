@@ -16,18 +16,30 @@ const allowedOrigins =  process.env.NODE_ENV === 'production'
   ? [
     'https://hospitex-frontend-jzwu.vercel.app', 
     'https://hospitex-frontend.vercel.app',
-    'https://hospitex.onrender.com'
+    'https://hospitex-jzwu.vercel.app',
+    /https:\/\/.*\.vercel\.app$/
     
   ]
   : ['http://localhost:5173','http://localhost:8080'];
 const corsOptions = {
   origin: function (origin, callback) {
     if(!origin) return callback(null,true);
-    if(allowedOrigins.includes(origin)|| allowedOrigins.some(o => typeof o === origin)) {
-  return callback(null, true);
-  }
-return callback(new Error('CORS: Origin not allowed'), false);},
-    credentials: true,
+
+   const isAllowed = allowedOrigins.some(allowed =>{
+    if(typeof allowed == 'string'){
+      return allowed == origin;
+    }
+    if(allowed instanceof RegExp){
+      return allowed.test(origin);
+    }
+    return false;
+   });
+   if(isAllowed){
+    return callback(null, true);
+   }
+   return callback(new Error('Not allowed by CORS'), false);
+  },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
