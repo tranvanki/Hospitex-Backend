@@ -16,7 +16,7 @@ const allowedOrigins =  process.env.NODE_ENV === 'production'
   ? [
     'https://hospitex-frontend-jzwu.vercel.app', 
     'https://hospitex-frontend.vercel.app',
-    'https://hospitex.vercel.app/',
+    'https://hospitex.vercel.app',
     'https://hospitex.onrender.com'
     
   ]
